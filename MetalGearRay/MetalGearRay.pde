@@ -12,6 +12,10 @@ float count;
 float reload;
 Kanon k = new Kanon();
 
+float OposX;
+float OposY;
+float angle;
+
 
 void setup() {
   size(1500,834);
@@ -19,8 +23,6 @@ void setup() {
   hjulIMG = loadImage("CoolHjul.png");
   baggrundIMG = loadImage("Baggrund.png");
   baggrundIMG.resize(1500,0);
-
-  
   
   for (int i=0;i<movers.length;i++){
     movers[i]=new Mover(3,50,height-50,0);
@@ -32,6 +34,7 @@ void draw() {
   //display background
   background(#1800FF);
   image(baggrundIMG,width/2,height/2);
+
   
 //DISPLAY BALLS
   for (int i=0;i<movers.length;i++){
@@ -84,15 +87,20 @@ void draw() {
       kanonIMG = loadImage("CoolKanon.png");
     }
   }
-  
-  
+// FIND ANGLE OF MOUSE IN RELATION TO CANON
+  OposX = 160+moveplz.roll;
+  OposY = height-90;
+  angle = atan2(mouseY-OposY,mouseX-OposX);
 }
+
 
 void mouseReleased(){
   //AFFYR KANON
+  
   if (sht < movers.length) {
-    movers[sht]= new Mover(3,250+moveplz.roll,height-150,55);
-    movers[sht].velocity = new PVector(shtx,-shty);
+    movers[sht]= new Mover(3,OposX-20+cos(angle)*150,OposY+sin(angle)*150,55);
+    float lshot= sqrt(sq(shtx)+sq(shty));
+    movers[sht].velocity = new PVector(cos(angle)*lshot,(sin(angle)*lshot));
     sht++;
     shtx=0;
     shty=0;
